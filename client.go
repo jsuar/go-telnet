@@ -1,10 +1,9 @@
 package telnet
 
-
 import (
+	"context"
 	"crypto/tls"
 )
-
 
 func DialAndCall(caller Caller) error {
 	conn, err := Dial()
@@ -12,11 +11,10 @@ func DialAndCall(caller Caller) error {
 		return err
 	}
 
-	client := &Client{Caller:caller}
+	client := &Client{Caller: caller}
 
 	return client.Call(conn)
 }
-
 
 func DialToAndCall(srvAddr string, caller Caller) error {
 	conn, err := DialTo(srvAddr)
@@ -24,11 +22,10 @@ func DialToAndCall(srvAddr string, caller Caller) error {
 		return err
 	}
 
-	client := &Client{Caller:caller}
+	client := &Client{Caller: caller}
 
 	return client.Call(conn)
 }
-
 
 func DialAndCallTLS(caller Caller, tlsConfig *tls.Config) error {
 	conn, err := DialTLS(tlsConfig)
@@ -36,7 +33,7 @@ func DialAndCallTLS(caller Caller, tlsConfig *tls.Config) error {
 		return err
 	}
 
-	client := &Client{Caller:caller}
+	client := &Client{Caller: caller}
 
 	return client.Call(conn)
 }
@@ -47,11 +44,10 @@ func DialToAndCallTLS(srvAddr string, caller Caller, tlsConfig *tls.Config) erro
 		return err
 	}
 
-	client := &Client{Caller:caller}
+	client := &Client{Caller: caller}
 
 	return client.Call(conn)
 }
-
 
 type Client struct {
 	Caller Caller
@@ -59,11 +55,9 @@ type Client struct {
 	Logger Logger
 }
 
-
 func (client *Client) Call(conn *Conn) error {
 
 	logger := client.logger()
-
 
 	caller := client.Caller
 	if nil == caller {
@@ -71,8 +65,8 @@ func (client *Client) Call(conn *Conn) error {
 		caller = StandardCaller
 	}
 
-
-	var ctx Context = NewContext().InjectLogger(logger)
+	// var ctx Context = NewContext().InjectLogger(logger)
+	ctx := context.Background()
 
 	var w Writer = conn
 	var r Reader = conn
@@ -80,10 +74,8 @@ func (client *Client) Call(conn *Conn) error {
 	caller.CallTELNET(ctx, w, r)
 	conn.Close()
 
-
 	return nil
 }
-
 
 func (client *Client) logger() Logger {
 	logger := client.Logger
@@ -94,7 +86,6 @@ func (client *Client) logger() Logger {
 	return logger
 }
 
-
 func (client *Client) SetAuth(username string) {
-//@TODO: #################################################
+	//@TODO: #################################################
 }

@@ -1,5 +1,6 @@
 package telnet
 
+import "context"
 
 // A Caller represents the client end of a TELNET (or TELNETS) connection.
 //
@@ -14,5 +15,5 @@ package telnet
 // The Reader's Read method "un-escapes" TELNET (and TELNETS) data, and filters
 // out TELNET (and TELNETS) command sequences.
 type Caller interface {
-	CallTELNET(Context, Writer, Reader)
+	CallTELNET(context.Context, Writer, Reader)
 }
